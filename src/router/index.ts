@@ -7,6 +7,8 @@ import panel from '../views/admin/panel.vue';
 import listaBuses from '../views/admin/listaBuses.vue';
 import destinoBuses from '../views/admin/destinos.vue';
 import historialVentas from '../views/admin/historialVentas.vue';
+import asientos from '../views/admin/asientos.vue';
+
 
 Vue.use(VueRouter);
 
@@ -18,7 +20,8 @@ const routes = [
   {path:'/panel',name:'panel',component:panel},
   {path:'/listabuses',name:'listabuses',component:listaBuses},
   {path:'/destinobuses',name:'destinobuses',component:destinoBuses},
-  {path:'/historialventas',name:'historialventas',component:historialVentas}
+  {path:'/historialventas',name:'historialventas',component:historialVentas},
+  {path:'/asientos',name:'asientos',component:asientos}
 ];
 
 const router = new VueRouter({

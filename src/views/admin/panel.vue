@@ -25,17 +25,22 @@
         </ul>
         <nav class="navbar">
           <form class="form-inline col-sm-12" v-on:submit.prevent="FiltrarDatos">
-            <div class="col-sm-3"><input class="form-control mr-sm-2" type="search" disabled placeholder="tuxtla gutierrez" aria-label="first" style="width: 100%;"></div>
             <div class="col-sm-3">
-              <select class="form-control mr-sm-2" v-model="select">
+              <p class="text-primary">lugar de salida</p>
+              <input class="form-control mr-sm-2" type="search" disabled placeholder="tuxtla gutierrez" aria-label="first" style="width: 100%;"></div>
+            <div class="col-sm-3">
+              <p class="text-primary" >destino</p>
+              <select class="form-control mr-sm-2" v-model="select" required>
               <option v-for="buses in listaBuses" :value="buses.destination" >{{buses.destination}}</option>
               </select>
             </div>
             <div class="col-sm-3">
-              <input type="submit"  class="btn btn-success" value="Filtrar Los datos">
+              <p class="text-primary">filtar datos</p>
+              <input type="submit" class="btn btn-success" value="Filtrar Los datos">
             </div>
             <div class="col-sm-3">
-               <input class="form-control" type="time" disabled>
+              <p class="text-primary">hora</p>
+               <input class="form-control" v-model="hora" type="time" disabled>
             </div>
           </form>
         </nav>
@@ -43,17 +48,35 @@
         <nav class="navbar">
           <form class="form-inline col-sm-12" v-on:submit.prevent>
             <div class="col-sm-3">
-              <input type="date" class="form-control" disabled>
+              <p class="text-primary">fecha</p>
+              <input type="date" v-model="fecha" class="form-control" disabled>
             </div>
             <div class="col-sm-3">
-              <input type="text" class="form-control" placeholder="destino"   disabled>
+              <p class="text-primary">destino</p>
+              <input type="text" v-model="destino" class="form-control" placeholder="destino"   disabled>
             </div>
             <div class="col-sm-3">
-              <input type="text" class="form-control" placeholder="clase"   disabled>
+              <p class="text-primary">clase</p>
+              <input type="text" v-model="clase" class="form-control" placeholder="clase"   disabled>
             </div>
             <div class="col-sm-3">
-              <input type="text" class="form-control" placeholder="precio base"   disabled>
+              <p class="text-primary">precio base</p>
+              <input type="text" v-model="precioBase" class="form-control" placeholder="precio base"   disabled>
             </div>
+          </form>
+        </nav>
+
+        <nav class="navbar">
+          <form class="form-inline col-sm-12" v-on:submit.prevent>
+            <div class="col-sm-3">
+              <p class="text-primary">precio </p>
+              <input type="text" v-model="precio" class="form-control" placeholder="precio"   disabled>
+            </div>
+            <div class="col-sm-3">
+               <p class="text-primary">elegir acientos</p>
+                <input type="submit" v-on:click="siguiente" class="btn btn-success" value="siguiente">
+            </div>
+
           </form>
         </nav>
 
@@ -73,6 +96,15 @@ export default {
       token:'',
       ulr:'https://aexajkl.herokuapp.com/api/v1/',
       select:'',
+      salida:'',
+      destino:'',
+      hora:'',
+      fecha:'',
+      clase:'',
+      precio:'',
+      precioBase:'',
+      boleto:[],
+      nombre:'',
     }
   },
   mounted(){
@@ -89,14 +121,55 @@ export default {
       axios.get(this.ulr+"user/bus/all",this.header)
       .then(response=>{
         this.listaBuses=response.data.bus;
-        console.log(response.data);
       })
       .catch(error=>{
-        console.log(error.response)
       })
     },
     FiltrarDatos:function() {
-      console.log("Xxxxx "+this.select);
+      this.token=JSON.parse(localStorage.getItem('token'));
+      this.header={
+        headers:{
+          Authorization:"Bearer "+this.token
+          }
+      }
+      var data={
+        destination:this.select,
+      }
+      axios.post(this.ulr+"user/bus/name",data,this.header)
+      .then(response=>{
+        this.nombre=response.data.bus.nameBus
+        this.salida=response.data.bus.departure;
+        this.destino=response.data.bus.destination;
+        this.hora=response.data.bus.time;
+        this.fecha=response.data.bus.date.substring(0,10);
+        this.clase=response.data.bus.class;
+        this.precio=response.data.bus.totalPrice;
+        this.precioBase=response.data.bus.priceBase;
+        this.boleto.push({
+          nombre:this.nombre,
+          salida:this.salida,
+          destino:this.destino,
+          hora:this.hora,
+          fecha:this.fecha,
+          clase:this.clase,
+          precio:this.precio,
+          precioBase:this.precioBase,
+        })
+
+      })
+      .catch(error=>{
+      })
+      
+    },
+    siguiente:function(){
+      if(this.salida==''){
+        alert("elija el destino porfavor");
+      }
+      else{
+       this.$router.push("/asientos"); 
+       localStorage.setItem('boleto',JSON.stringify(this.boleto)); 
+       localStorage.setItem('user',JSON.stringify(this.userData));
+      }
     }
 
   }
