@@ -1,29 +1,45 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+<div>
+  <nav class="mb-1 navbar navbar-expand-lg navbar-dark info-color">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
+    aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">
+          <i class="fab fa-facebook-f"></i> Facebook
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fab fa-instagram"></i> Instagram</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user"></i> Profile </a>
+        <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
+          <a class="dropdown-item" href="#">My account</a>
+          <a class="dropdown-item" href="#">Log out</a>
+        </div>
+      </li>
+    </ul>
   </div>
+</nav>
+  <router-view/>
+</div> 
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+<script>
+  
 
-export default Vue.extend({
-  name: 'app',
-  components: {
-    HelloWorld,
-  },
-});
-</script>
+</script> 
+
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
