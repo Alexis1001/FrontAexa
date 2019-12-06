@@ -105,6 +105,7 @@ export default {
       precioBase:'',
       boleto:[],
       nombre:'',
+      id:'',
     }
   },
   mounted(){
@@ -137,6 +138,8 @@ export default {
       }
       axios.post(this.ulr+"user/bus/name",data,this.header)
       .then(response=>{
+        console.log(response.data.bus);
+            this.id=response.data.bus.id,
         this.nombre=response.data.bus.nameBus
         this.salida=response.data.bus.departure;
         this.destino=response.data.bus.destination;
@@ -146,6 +149,7 @@ export default {
         this.precio=response.data.bus.totalPrice;
         this.precioBase=response.data.bus.priceBase;
         this.boleto.push({
+          id:this.id,
           nombre:this.nombre,
           salida:this.salida,
           destino:this.destino,
