@@ -39,16 +39,13 @@ export default {
     },
     methods:{
         register:function(){
-          console.log("user name "+this.user.username);
-          console.log("user email "+this.user.email);
-          console.log("user password "+this.user.password);
           axios.post(this.url+"user/register",this.user)
           .then(response=>{
               localStorage.setItem('token',JSON.stringify(response.data.token));
               this.$router.push("/panel");
           })
           .catch(error=>{
-              console.log(error.response);
+
           })
 
         }

@@ -31,7 +31,9 @@
             <div class="col-sm-3">
               <p class="text-primary" >destino</p>
               <select class="form-control mr-sm-2" v-model="select" required>
-              <option v-for="buses in listaBuses" :value="buses.destination" >{{buses.destination}}</option>
+              <option v-for="buses in listaBuses" :value="buses.destination" >
+                <a v-if="buses.status=='activo'">{{buses.destination}}</a>
+              </option>
               </select>
             </div>
             <div class="col-sm-3">
@@ -72,6 +74,13 @@
               <p class="text-primary">precio </p>
               <input type="text" v-model="precio" class="form-control" placeholder="precio"   disabled>
             </div>
+             <div class="col-sm-3">
+               <p class="text-primary">tipo de boleto</p>
+               <select class="form-control mr-sm-2"  v-model="selectBoleto">
+                  <option value="sencillo">sencillo</option>
+                  <option value="saab">doble</option>
+              </select>
+            </div>
             <div class="col-sm-3">
                <p class="text-primary">elegir acientos</p>
                 <input type="submit" v-on:click="siguiente" class="btn btn-success" value="siguiente">
@@ -106,6 +115,7 @@ export default {
       boleto:[],
       nombre:'',
       id:'',
+      selectBoleto:'',
     }
   },
   mounted(){
@@ -136,10 +146,11 @@ export default {
       var data={
         destination:this.select,
       }
+      
       axios.post(this.ulr+"user/bus/name",data,this.header)
       .then(response=>{
-        console.log(response.data.bus);
-            this.id=response.data.bus.id,
+        //console.log(response.data.bus);
+        this.id=response.data.bus.id,
         this.nombre=response.data.bus.nameBus
         this.salida=response.data.bus.departure;
         this.destino=response.data.bus.destination;
@@ -157,7 +168,8 @@ export default {
           fecha:this.fecha,
           clase:this.clase,
           precio:this.precio,
-          precioBase:this.precioBase,
+          precioBase:this.precioBase,                    
+          TipoDeBoleto:this.selectBoleto,
         })
 
       })

@@ -10,6 +10,7 @@
         </div>  
         
         <div class="container">
+            <h6 class="nav-link admin-header-block"><a  class="text-center">programar destinos </a></h6>
             <div class="row col-md-12 col-md-offset-0 custyle">
                 <div class="panel panel-primary">
                     <table class="table table-striped custab">
@@ -29,35 +30,35 @@
                         </thead>
                         <tr v-for="(bus,index) in  listabuses" v-bind:key="index" >
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.nameBus}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.nameBus}}</span>
                             </td>  
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.class}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.class}}</span>
                             </td>  
                             <td class="text-center" >
-                                <span  class="badge badge-success"  v-if="bus.status=='activo'">{{bus.status}}</span>
+                                <span  class="badge badge-success" v-if="bus.status=='activo'">{{bus.status}}</span>
                             </td>   
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.departure}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.departure}}</span>
                             </td>  
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.date.substring(0,10)}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.date.substring(0,10)}}</span>
                             </td>
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.time}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.time}}</span>
                             </td> 
                             <td class="text-center" >
-                                <span  class="label label-success">{{bus.destination}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{bus.destination}}</span>
                             </td>  
                             <td class="text-center" >
-                                <span  class="label label-success">{{"$ "+bus.totalPrice}}</span>
+                                <span  class="label label-success" v-if="bus.status=='activo'">{{"$ "+bus.totalPrice}}</span>
                             </td>    
                             <td class="text-center" >
-                                    <span  class="label label-success">{{"$ "+bus.priceBase}}</span>
+                                    <span  class="label label-success" v-if="bus.status=='activo'">{{"$ "+bus.priceBase}}</span>
                                 </td>                              
                             </td>  
-                            <td  class="text-center"><a class='btn btn-warning btn-xs' @click="showModal(bus)" id="show-btn"  href="#">
-                              <span class="glyphicon glyphicon-edit" ></span>editar</a> 
+                            <td  class="text-center"><a class='btn btn-warning btn-xs' v-if="bus.status=='activo'"  @click="showModal(bus)" id="show-btn"  href="#">
+                              <span  class="glyphicon glyphicon-edit" ></span>editar</a> 
                             </td>
                         </tr>
                     </table> 

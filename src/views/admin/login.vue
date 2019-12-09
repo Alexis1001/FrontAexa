@@ -40,7 +40,7 @@ export default {
                 this.$router.push("/panel");
             })
             .catch(error=>{
-                console.log(error.response);
+               alert("error password or email oncorrect")
             })
         }
     }

@@ -37,7 +37,7 @@
                     </td>    
                      <td class="text-center" >
                         <span  class="badge badge-success"  v-if="bus.status=='activo'">{{bus.status}}</span>
-                        <span  class="badge badge-danger"  v-else-if="bus.status=='inactivo'">{{bus.status}}</span>
+                        <span  class="badge badge-danger"   v-else-if="bus.status=='inactivo'">{{bus.status}}</span>
                     </td> 
                      <td class="text-center" >
                         <span  class="label label-success">{{bus.departure}}</span>
