@@ -1,35 +1,4 @@
 <template>
-<!--<div class="container">
-<table class="table table-striped custab">
-  <tbody>
-    <tr v-for="(bus,index) in 5" v-bind:key="index">
-      <th scope="row">index</th>
-      <td><button>hola</button></td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-  </tbody>
-</table>
-    
-</div>-->
-<!--div>
-  <div class="row" v-for="(bus,index) in 5" v-bind:key="index">
-
-    <div class="col-lg-1">
-      <button class="btn btn-primary">{{index}}</button>
-    </div>
-    <div class="col-lg-1">
-      <button class="btn btn-primary">{{index}}</button>
-    </div>
-    <div class="col-lg-1">
-      <button class="btn btn-primary">{{index}}</button>
-    </div>
-    <div class="col-lg-1">
-      <button class="btn btn-primary">{{index}}</button>
-    </div>
-  </div>
-</div>-->
-
 <div class="container">
   <nav>
     <form class="form-inline col-sm-12 " v-on:submit.prevent>
@@ -164,7 +133,6 @@
 
 
 </template>
-
 <script>
 import axios from 'axios';
 export default {
@@ -203,10 +171,26 @@ export default {
             comprador:'',
             pago:'',
             DataUser:[],
+            stripe_token: {},
+            price: 0,
+            stripe_instance: {},
+            order_status:'READY',
+            valorTotal:'',
         }
     },
     mounted(){
-        this.start();
+      this.stripe_instance = StripeCheckout.configure({
+            key: 'pk_test_Xqu20VghJJ8itXNzxj7lGcIw00ICbxvRQo',
+            locale: 'auto',
+            token: (token) => {
+              console.log('got a token. sending data to localhost');
+              this.stripe_token = token.id;
+              console.log('token ---> ', this.stripe_token);
+              console.log("ordes status ",this.order_status)
+              this.sendData2Server(this.stripe_token,this.order_status);
+            }
+        });
+      this.start();
     },
     methods:{
         start:function(){
@@ -244,7 +228,7 @@ export default {
             this.compra.push(this.selectNormal)
             for(var i=0; i<this.asientoNormal.length;i++){
               if(this.selectNormal==this.asientoNormal[i].asiento){
-                  this.addSold("normal",this.selectNormal);
+                  //this.addSold("normal",this.selectNormal);
                   this.asientoNormal.splice(i,1);
                   alert("asiento agregado")
               }
@@ -255,7 +239,7 @@ export default {
             this.compra.push(this.selectEspecial);
             for(var i=0; i<this.asientosEspeciales.length;i++){
               if(this.selectEspecial==this.asientosEspeciales[i].asiento){
-                  this.addSold("especial",this.selectEspecial);
+                  //this.addSold("especial",this.selectEspecial);
                   this.asientosEspeciales.splice(i,1);
                   alert("asiento agregado")
               }
@@ -290,11 +274,11 @@ export default {
             console.log(response.data);
           })
           .catch(error=>{
-            console.log(response.error);
           })
 
         },
         addHistory:function(TotalBoletosVendidos,total) {
+          
           this.header={
             headers:{
               Authorization:"Bearer "+this.token
@@ -308,16 +292,71 @@ export default {
             total:total,
             bus_id:this.ticket.id,
           }
+          console.log("NOMBRE DEL COMPRADOR"+this.comprador);
+          this.DataUser.push({
+            nombreComprador:this.comprador,
+            metodoDePago:this.pago,
+            TotalApagar:total,
+            bus:data.nameBus,
+            TipoDeBoleto:this.TipoDeBoleto,
+            clase:data.class,
+            horaSalida:this.ticket.hora,
+            fechaSalida:this.ticket.fecha,
+            lugarSalida:'tuxtla gutierrez',
+            LugarDestino:this.ticket.destino,
+            fechaRegreso:'2019-15-12',
+          })
+          localStorage.setItem('DataUser',JSON.stringify(this.DataUser)); 
+          console.log("agregar historial XXXXXX")
+          console.log("el valor total es zzzzz ",this.valorTotal);
+          //this.$router.push("/metodopago"); <total> el precio a pagar
           
-          axios.post(this.ulr+"user/history",data,this.header)
+          this.purchaseStuff(total);
+          /*axios.post(this.ulr+"user/history",data,this.header)
           .then(response=>{
             console.log(response.data);
-
+            localStorage.setItem('DataUser',JSON.stringify(DataUser)); 
+            this.$router.push("/metododepago");
           })
           .catch(error=>{
-            console.log(response.error);
-          })
 
+          })*/
+
+        },
+        purchaseStuff(total){
+            this.stripe_instance.open({
+              name: 'INFINITE INDUSTRIES',
+              description: 'stuff and stuff',
+              amount: total
+            })
+        console.log('attempting to get a token ',total);
+        localStorage.setItem('total',JSON.stringify(total));
+        },
+        sendData2Server: (stripe_token,order_status) => {
+          console.log("impirmiendo el order status ",order_status)
+          console.log("token ",stripe_token);
+          order_status="PENDING";
+          console.log("order status ",order_status)
+          var total=JSON.parse(localStorage.getItem('total'));
+          console.log("el total es ",total);
+          var email=JSON.parse(localStorage.getItem('email'));
+          console.log("email ",email)
+          axios.post('http://localhost:8000/process_payment',{
+            token_id:stripe_token,
+            price:total,
+            email:email,
+          })
+          .then((response) => {
+              console.log("respuesta perro ");
+              console.log(response);
+              console.log("respuesta del body ");
+              console.log(response.body);
+              order_status= "SUCCESSFULLY COMPLETED";
+            },(response) => {
+              console.log("RESPUESES DESPUES DEL THEN");
+              console.log(response.body);
+              order_status= "FAILED";
+            });
         }
     }   
     

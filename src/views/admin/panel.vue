@@ -149,7 +149,6 @@ export default {
       
       axios.post(this.ulr+"user/bus/name",data,this.header)
       .then(response=>{
-        //console.log(response.data.bus);
         this.id=response.data.bus.id,
         this.nombre=response.data.bus.nameBus
         this.salida=response.data.bus.departure;

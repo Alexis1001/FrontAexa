@@ -38,6 +38,7 @@ export default {
             .then(response=>{
                 localStorage.setItem('token',JSON.stringify(response.data.admin.token));
                 this.$router.push("/panel");
+                localStorage.setItem('email',JSON.stringify(this.user.email))
             })
             .catch(error=>{
                alert("error password or email oncorrect")
