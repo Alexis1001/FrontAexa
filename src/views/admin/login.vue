@@ -29,7 +29,7 @@ export default {
                 email:'',
                 password:'',
             },
-            url:"https://aexajkl.herokuapp.com/api/v1/",
+            url:"http://127.0.0.1:3333/api/v1/",
         }
     },
     methods:{
@@ -37,7 +37,7 @@ export default {
             axios.post(this.url+"user/login",this.user)
             .then(response=>{
                 localStorage.setItem('token',JSON.stringify(response.data.admin.token));
-                this.$router.push("/panel");
+                this.$router.push("/twostep");
                 localStorage.setItem('email',JSON.stringify(this.user.email))
             })
             .catch(error=>{

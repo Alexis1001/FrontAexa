@@ -119,7 +119,7 @@ export default {
     }
   },
   mounted(){
-    this.getAllBuses();
+    //this.getAllBuses();
   },
   methods:{
     getAllBuses:function(){

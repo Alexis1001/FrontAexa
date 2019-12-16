@@ -34,18 +34,22 @@ export default {
                 email:'',
                 password:'',
             },
-            url:"https://aexajkl.herokuapp.com/api/v1/",
+            url:"http://127.0.0.1:3333/api/v1/",
         }
     },
     methods:{
-        register:function(){
+        register:function(){ 
           axios.post(this.url+"user/register",this.user)
           .then(response=>{
-              localStorage.setItem('token',JSON.stringify(response.data.token));
-              this.$router.push("/panel");
+              console.log(response)
+              var token=response.data.admin.token;
+              //console.log("el token es",token)
+              localStorage.setItem('email',JSON.stringify(token))
+              this.$router.push("/twostep")
+
           })
           .catch(error=>{
-
+              console.log(error.response)
           })
 
         }
